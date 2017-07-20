@@ -48,6 +48,7 @@ func main() {
 	c := irc.Client(cfg)
 
 	c.HandleFunc("connected", func(conn *irc.Conn, line *irc.Line) {
+		fmt.Println("Connected")
 		conn.Join(config.Channel)
 		ticker := time.NewTicker(5 * time.Second)
 		q := make(chan struct{})
