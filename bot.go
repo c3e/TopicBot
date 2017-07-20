@@ -28,9 +28,9 @@ type Status struct {
 var last = true
 
 func main() {
-	preset := []string{"bla | Raumstatus: ", " | blah"}
+	preset := []string{"Wir sind da watt am Hacken dran | Raumstatus: ", " | Treff: Jeden Mittwoch ab 19 Uhr | irc Öffnungszeiten: 8:00-18:00 Uhr"}
 
-	cfg := irc.NewConfig("StatusBot")
+	cfg := irc.NewConfig("TopicBot")
 	cfg.SSL = true
 	cfg.SSLConfig = &tls.Config{InsecureSkipVerify: true}
 	cfg.Server = "irc.hackint.net:9999"
