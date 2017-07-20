@@ -9,8 +9,6 @@ import (
 
 	"encoding/json"
 
-	"io/ioutil"
-
 	irc "github.com/fluffle/goirc/client"
 )
 
@@ -32,7 +30,7 @@ type Config struct {
 	Channel string `json:"channel"`
 }
 
-var last = true
+var last = Status{}
 
 func main() {
 	preset := []string{"Wir sind da watt am Hacken dran | Raumstatus: ", " | Treff: Jeden Mittwoch ab 19 Uhr | irc Öffnungszeiten: 8:00-18:00 Uhr"}
@@ -57,20 +55,23 @@ func main() {
 				select {
 				case <-ticker.C:
 					s := getStatus()
-					t := time.Unix(s.State.Lastchange, 0).Format("_2. Jan 15:04:05")
-					y := preset[0]
-					if s.State.Open {
-						y += t + " OG: offen"
-					} else {
-						y += t + " OG: geschlossen"
+					if last.State.Open != s.State.Open || last.Sensors.DoorLocked[1].Value != s.Sensors.DoorLocked[1].Value {
+						t := time.Unix(s.State.Lastchange, 0).Format("_2. Jan 15:04:05")
+						y := preset[0]
+						if s.State.Open {
+							y += t + " OG: offen"
+						} else {
+							y += t + " OG: geschlossen"
+						}
+						if s.Sensors.DoorLocked[1].Value {
+							y += ", Keller: geschlossen"
+						} else {
+							y += ", Keller: offen"
+						}
+						y += preset[1]
+						c.Topic(config.Channel, y)
+						last = s
 					}
-					if s.Sensors.DoorLocked[1].Value {
-						y += ", Keller: geschlossen"
-					} else {
-						y += ", Keller: offen"
-					}
-					y += preset[1]
-					c.Topic(config.Channel, y)
 				case <-q:
 					ticker.Stop()
 					return
@@ -98,14 +99,4 @@ func getStatus() Status {
 	s := Status{}
 	json.NewDecoder(resp.Body).Decode(&s)
 	return s
-}
-
-func readConfig() Config {
-	b, e := ioutil.ReadFile("config.json")
-	if e != nil {
-		log.Fatal(e.Error())
-	}
-	c := Config{}
-	json.Unmarshal(b, c)
-	return c
 }
