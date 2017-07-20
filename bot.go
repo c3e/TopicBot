@@ -9,6 +9,8 @@ import (
 
 	"encoding/json"
 
+	"io/ioutil"
+
 	irc "github.com/fluffle/goirc/client"
 )
 
@@ -25,12 +27,19 @@ type Status struct {
 	} `json:"sensors"`
 }
 
+type Config struct {
+	Nick    string `json:"nick"`
+	Channel string `json:"channel"`
+}
+
 var last = true
 
 func main() {
 	preset := []string{"Wir sind da watt am Hacken dran | Raumstatus: ", " | Treff: Jeden Mittwoch ab 19 Uhr | irc Öffnungszeiten: 8:00-18:00 Uhr"}
 
-	cfg := irc.NewConfig("TopicBot")
+	config := readConfig()
+
+	cfg := irc.NewConfig(config.Nick)
 	cfg.SSL = true
 	cfg.SSLConfig = &tls.Config{InsecureSkipVerify: true}
 	cfg.Server = "irc.hackint.net:9999"
@@ -39,7 +48,7 @@ func main() {
 	c := irc.Client(cfg)
 
 	c.HandleFunc("connected", func(conn *irc.Conn, line *irc.Line) {
-		conn.Join("#chaospott-bot")
+		conn.Join(config.Channel)
 		ticker := time.NewTicker(5 * time.Second)
 		q := make(chan struct{})
 		go func() {
@@ -60,7 +69,7 @@ func main() {
 						y += ", Keller: offen"
 					}
 					y += preset[1]
-					c.Topic("#chaospott-bot", y)
+					c.Topic(config.Channel, y)
 				case <-q:
 					ticker.Stop()
 					return
@@ -88,4 +97,14 @@ func getStatus() Status {
 	s := Status{}
 	json.NewDecoder(resp.Body).Decode(&s)
 	return s
+}
+
+func readConfig() Config {
+	b, e := ioutil.ReadFile("config.json")
+	if e != nil {
+		log.Fatal(e.Error())
+	}
+	c := Config{}
+	json.Unmarshal(b, c)
+	return c
 }
