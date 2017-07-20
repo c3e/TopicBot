@@ -1,0 +1,27 @@
+{
+	"ImportPath": "github.com/fronbasal/statusbot",
+	"GoVersion": "go1.8",
+	"GodepVersion": "v79",
+	"Deps": [
+		{
+			"ImportPath": "github.com/fluffle/goirc/client",
+			"Rev": "2ece5aab675bac99b291f006e95710d8b9d0758e"
+		},
+		{
+			"ImportPath": "github.com/fluffle/goirc/logging",
+			"Rev": "2ece5aab675bac99b291f006e95710d8b9d0758e"
+		},
+		{
+			"ImportPath": "github.com/fluffle/goirc/state",
+			"Rev": "2ece5aab675bac99b291f006e95710d8b9d0758e"
+		},
+		{
+			"ImportPath": "github.com/golang/mock/gomock",
+			"Rev": "93f6609a15b7de76bd49259f1f9a6b58df358936"
+		},
+		{
+			"ImportPath": "golang.org/x/net/proxy",
+			"Rev": "1f9224279e98554b6a6432d4dd998a739f8b2b7c"
+		}
+	]
+}
