@@ -47,7 +47,7 @@ func main() {
 				select {
 				case <-ticker.C:
 					s := getStatus()
-					t := time.Unix(s.State.Lastchange, 0).Format("Mon Jan _2 15:04:05")
+					t := time.Unix(s.State.Lastchange, 0).Format("_2. Jan 15:04:05")
 					y := preset[0]
 					if s.State.Open {
 						y += t + " OG: offen "
@@ -55,9 +55,9 @@ func main() {
 						y += t + " OG: geschlossen "
 					}
 					if s.Sensors.DoorLocked[1].Value {
-						y += "| Keller: geschlossen"
+						y += ", Keller: geschlossen"
 					} else {
-						y += "| Keller: offen"
+						y += ", Keller: offen"
 					}
 					y += preset[1]
 					c.Topic("#chaospott-bot", y)
