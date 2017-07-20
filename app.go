@@ -37,7 +37,7 @@ var last = true
 func main() {
 	preset := []string{"Wir sind da watt am Hacken dran | Raumstatus: ", " | Treff: Jeden Mittwoch ab 19 Uhr | irc Öffnungszeiten: 8:00-18:00 Uhr"}
 
-	config := readConfig()
+	config := Config{Nick: "TopicBot", Channel: "#chaospott"}
 
 	cfg := irc.NewConfig(config.Nick)
 	cfg.SSL = true
@@ -50,7 +50,7 @@ func main() {
 	c.HandleFunc("connected", func(conn *irc.Conn, line *irc.Line) {
 		fmt.Println("Connected")
 		conn.Join(config.Channel)
-		ticker := time.NewTicker(5 * time.Second)
+		ticker := time.NewTicker(5 * time.Hour)
 		q := make(chan struct{})
 		go func() {
 			for {
