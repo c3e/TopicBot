@@ -50,9 +50,9 @@ func main() {
 					t := time.Unix(s.State.Lastchange, 0).Format("_2. Jan 15:04:05")
 					y := preset[0]
 					if s.State.Open {
-						y += t + " OG: offen "
+						y += t + " OG: offen"
 					} else {
-						y += t + " OG: geschlossen "
+						y += t + " OG: geschlossen"
 					}
 					if s.Sensors.DoorLocked[1].Value {
 						y += ", Keller: geschlossen"
